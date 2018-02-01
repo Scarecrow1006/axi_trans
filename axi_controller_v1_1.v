@@ -1,7 +1,8 @@
 
 `timescale 1 ns / 1 ps
 
-	module axi_controller_v1_1 #
+module axi_controller_v1_1 #
+	//parameters
 	(
 		// Users to add parameters here
 		parameter t_0=3'b000, 
@@ -18,7 +19,7 @@
 		// Parameters of Axi Master Bus Interface M00_AXI
 		parameter  C_M00_AXI_TARGET_SLAVE_BASE_ADDR	= 32'h40000000,
 		parameter integer C_M00_AXI_BURST_LEN	= 16,
-		parameter integer C_M00_AXI_ID_WIDTH	= 1,
+		parameter integer C_M00_AXI_ID_WIDTH	= 4,
 		parameter integer C_M00_AXI_ADDR_WIDTH	= 32,
 		parameter integer C_M00_AXI_DATA_WIDTH	= 32,
 		parameter integer C_M00_AXI_AWUSER_WIDTH	= 0,
@@ -27,6 +28,7 @@
 		parameter integer C_M00_AXI_RUSER_WIDTH	= 0,
 		parameter integer C_M00_AXI_BUSER_WIDTH	= 0
 	)
+	//ports
 	(
 		// Users to add ports here
 
@@ -40,39 +42,39 @@
 		output wire  m00_axi_error,
 		input wire  m00_axi_aclk,
 		input wire  m00_axi_aresetn,
-		output reg [C_M00_AXI_ID_WIDTH-1 : 0] m00_axi_awid,
-		output reg [C_M00_AXI_ADDR_WIDTH-1 : 0] m00_axi_awaddr,
-		output reg [7 : 0] m00_axi_awlen,
-		output reg [2 : 0] m00_axi_awsize,
-		output reg [1 : 0] m00_axi_awburst,
+		output wire [C_M00_AXI_ID_WIDTH-1 : 0] m00_axi_awid,
+		output wire [C_M00_AXI_ADDR_WIDTH-1 : 0] m00_axi_awaddr,
+		output wire [7 : 0] m00_axi_awlen,
+		output wire [2 : 0] m00_axi_awsize,
+		output wire [1 : 0] m00_axi_awburst,
 		output wire  m00_axi_awlock,
-		output reg [3 : 0] m00_axi_awcache,
-		output reg [2 : 0] m00_axi_awprot,
-		output reg [3 : 0] m00_axi_awqos,
-		output reg [C_M00_AXI_AWUSER_WIDTH-1 : 0] m00_axi_awuser,
-		output reg  m00_axi_awvalid,
+		output wire [3 : 0] m00_axi_awcache,
+		output wire [2 : 0] m00_axi_awprot,
+		output wire [3 : 0] m00_axi_awqos,
+		output wire [C_M00_AXI_AWUSER_WIDTH-1 : 0] m00_axi_awuser,
+		output wire  m00_axi_awvalid,
 		input wire  m00_axi_awready,
-		output reg [C_M00_AXI_DATA_WIDTH-1 : 0] m00_axi_wdata,
-		output reg [C_M00_AXI_DATA_WIDTH/8-1 : 0] m00_axi_wstrb,
-		output reg  m00_axi_wlast,
-		output reg [C_M00_AXI_WUSER_WIDTH-1 : 0] m00_axi_wuser,
-		output reg  m00_axi_wvalid,
+		output wire [C_M00_AXI_DATA_WIDTH-1 : 0] m00_axi_wdata,
+		output wire [C_M00_AXI_DATA_WIDTH/8-1 : 0] m00_axi_wstrb,
+		output wire  m00_axi_wlast,
+		output wire [C_M00_AXI_WUSER_WIDTH-1 : 0] m00_axi_wuser,
+		output wire  m00_axi_wvalid,
 		input wire  m00_axi_wready,
 		input wire [C_M00_AXI_ID_WIDTH-1 : 0] m00_axi_bid,
 		input wire [1 : 0] m00_axi_bresp,
 		input wire [C_M00_AXI_BUSER_WIDTH-1 : 0] m00_axi_buser,
 		input wire  m00_axi_bvalid,
-		output reg  m00_axi_bready,
-		output reg [C_M00_AXI_ID_WIDTH-1 : 0] m00_axi_arid,
-		output reg [C_M00_AXI_ADDR_WIDTH-1 : 0] m00_axi_araddr,
-		output reg [7 : 0] m00_axi_arlen,
-		output reg [2 : 0] m00_axi_arsize,
-		output reg [1 : 0] m00_axi_arburst,
+		output wire  m00_axi_bready,
+		output wire [C_M00_AXI_ID_WIDTH-1 : 0] m00_axi_arid,
+		output wire [C_M00_AXI_ADDR_WIDTH-1 : 0] m00_axi_araddr,
+		output wire [7 : 0] m00_axi_arlen,
+		output wire [2 : 0] m00_axi_arsize,
+		output wire [1 : 0] m00_axi_arburst,
 		output wire  m00_axi_arlock,
-		output reg [3 : 0] m00_axi_arcache,
-		output reg [2 : 0] m00_axi_arprot,
-		output reg [3 : 0] m00_axi_arqos,
-		output reg [C_M00_AXI_ARUSER_WIDTH-1 : 0] m00_axi_aruser,
+		output wire [3 : 0] m00_axi_arcache,
+		output wire [2 : 0] m00_axi_arprot,
+		output wire [3 : 0] m00_axi_arqos,
+		output wire [C_M00_AXI_ARUSER_WIDTH-1 : 0] m00_axi_aruser,
 		output wire  m00_axi_arvalid,
 		input wire  m00_axi_arready,
 		input wire [C_M00_AXI_ID_WIDTH-1 : 0] m00_axi_rid,
@@ -146,108 +148,29 @@
 	);
 
 	// Add user logic here
-	reg[2:0] cur, next;
-	
-	always @(posedge m00_axi_aclk) begin
-		cur=next;
-	end
-	
-	always @(*) begin
-		case(cur)
-			t_0: begin
-				if(m00_axi_init_axi_txn) next=t_1;
-				else next=t_0;
-			end
-			t_1: begin
-				next=t_2;
-			end
-			t_2: begin
-				if(m00_axi_awready) begin
-					if(m00_axi_wready) next=t_4;
-					else next=t_3;
-				end
-				else next=t_2;
-			end
-			t_3: begin
-				if(m00_axi_wready) next=t_4;
-				else next=t_3;
-			end
-			t_4: begin
-				if(m00_axi_awready) begin
-					if(m00_axi_wready) next=t_6;
-					else next=t_5;
-				end
-				else next=t_4;
-			end
-			t_5:  begin
-				if(m00_axi_wready) next=t_6;
-				else next=t_5;
-			end
-			t_6: begin
-				next=t_6;
-			end
-		default next=t_0;
-		endcase
-	end
-	
-	always @(*) begin
-		case(cur)
-			t_1: begin
-				m00_axi_awlen=8'b00000000;
-				m00_axi_awsize=3'b100;
-				m00_axi_awburst=2'b00;
-				m00_axi_awlock=2'b00;
-				m00_axi_awcache=4'b0001;
-				m00_axi_awprot=3'b000;
-				m00_axi_awqos=4'b0001;
-				m00_axi_wstrb=4'b1111;
-				m00_axi_awvalid=1'b0;
-				m00_axi_wvalid=1'b0;
-				m00_axi_arvalid=1'b0;
-				m00_axi_bready=1'b1;
-				m00_axi_rready=1'b1;
-			end
-			t_2: begin
-				m00_axi_awid=4'b0000;
-				m00_axi_awaddr=32'he000a204;
-				m00_axi_wid=4'b0000;
-				m00_axi_wdata=32'h0000fe01;
-				m00_axi_wlast=1'b1;
-				m00_axi_awvalid=1'b1;
-				m00_axi_wvalid=1'b1;
-			end
-			t_3: begin
-				m00_axi_wid=4'b0000;
-				m00_axi_wdata=32'h0000fe01;
-				m00_axi_wlast=1'b1;
-				m00_axi_wvalid=1'b1;
-			end
-			t_4: begin
-				m00_axi_awid=4'b0001;
-				m00_axi_awaddr=32'he000a208;
-				m00_axi_wid=4'b0001;
-				m00_axi_wdata=32'h0000fe01;
-				m00_axi_wlast=1'b1;
-				m00_axi_awvalid=1'b1;
-				m00_axi_wvalid=1'b1;
-			end
-			t_5: begin
-				m00_axi_awid=4'b0001;
-				m00_axi_wdata=32'h0000fe01;
-				m00_axi_wlast=1'b1;
-				m00_axi_wvalid=1'b1;
-			end
-			t_6: begin
-				m00_axi_awid=4'b0010;
-				m00_axi_awaddr=32'he000a040;
-				m00_axi_wid=4'b0010;
-				m00_axi_wdata=32'h00000001;
-				m00_axi_wlast=1'b1;
-				m00_axi_awvalid=1'b1;
-				m00_axi_wvalid=1'b1;
-			end
-		endcase
-	end
+
+	//controller
+	controller con(
+		m00_axi_init_axi_txn,
+		m00_axi_aclk,
+		m00_axi_awid,
+		m00_axi_awaddr,
+		m00_axi_awlen,
+		m00_axi_awsize,
+		m00_axi_awburst,
+		m00_axi_awlock,
+		m00_axi_awcache,
+		m00_axi_awprot,
+		m00_axi_awqos,
+		m00_axi_awvalid,
+		m00_axi_awready,
+		m00_axi_wdata,
+		m00_axi_wstrb,
+		m00_axi_wlast,
+		m00_axi_wvalid,
+		m00_axi_wready,
+		m00_axi_bid
+	);
 	// User logic ends
 
-	endmodule
+endmodule
